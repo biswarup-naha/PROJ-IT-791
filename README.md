@@ -1,55 +1,152 @@
-# Automated Configuration and Assessment of Network Devices in a single administrative domain (Software Defined Networking)
+# Automated Configuration and Assessment of Network Devices in a Single Administrative Domain (Software Defined Networking)
 
-This project is a SDN-based network device configuration and assessment tool. It is designed to automate the process of configuring and assessing network devices in a single administrative domain.
+This project is a SDN-based tool designed to **automate configuration and assessment of network devices** in a single administrative domain. It leverages **FastAPI** and **React** to provide a modern web interface and RESTful APIs for processing and visualizing router configuration data such as routing tables.
 
-## Getting Started
+---
 
-To get started with this project, you need to follow the steps below.
+## 🚀 Features
+
+- ✅ Accepts raw routing table input (e.g., from Cisco routers).
+- ✅ Parses and converts the routing data into structured JSON.
+- ✅ Stores the structured data in a backend file (`routing.json`).
+- ✅ Renders the routing table beautifully using a modern React UI.
+- ✅ Fully automated backend–frontend integration with REST APIs.
+- ✅ Route information includes: destination, next-hop, protocol, metric, and interface.
+
+---
+
+## 🧱 Tech Stack
+
+| Layer           | Tech Used                    |
+|-----------------|------------------------------|
+| Language        | Python 3.12, TypeScript      |
+| Backend         | FastAPI (with CORS enabled)  |
+| Frontend        | React (Vite), Tailwind CSS   |
+| UI Components   | shadcn/ui, lucide-react      |
+| API Calls       | Axios                        |
+| Package manager | bun, uv                      |
+| Dev Tools       | VSCode, Browser DevTools     |
+| Simulation      | Cisco Packet Tracer          |
+
+---
+
+## 📦 Project Structure
+
+```
+
+project/
+├── routing_simulator.py           # Console-based version
+├── routing.py                     # Python parser for routing table text
+├── routing_table_input.txt        # Sample input from a router
+├── routing_table.json             # Output after parsing
+├── backend/
+│   └── main.py                    # FastAPI app (handles POST/GET routing data)
+├── frontend/
+│   ├── Home.tsx                  # Raw input form + POST logic
+│   ├── RoutingTable.tsx          # Table view after GET
+│   ├── App.tsx                   # Routing using react-router-dom
+│   └── main.tsx                  # Entry point with <App />
+
+```
+
+---
+
+## ⚙️ Setup Instructions
 
 ### Prerequisites
 
-Ensure you have the following installed on your system:
+Ensure the following are installed:
 
-- **Python 3.12**: This project is built using Python 3.12. Make sure you have this version installed to avoid compatibility issues.
-- **Cisco Packet Tracer**: This project requires Cisco Packet Tracer to be installed on your system. You can download it from the official website.
+- **Python 3.12 + uv**
+- **Node.js + bun**
+- **Cisco Packet Tracer** (for simulated routing output)
 
-### Setup Instructions
+---
 
-1. **Create an Input File**:
-    - Create a text file named `routing_table_input.txt` in the root directory of the project.
-    - This file will contain the routing table data required by the simulator.
+### 🔧 Backend Setup (FastAPI)
 
-2. **Populate the Input File**:
-    - Add your routing table data from the simulated router to the `routing_table_input.txt` file.
-    - Ensure that the file is properly formatted and contains the necessary information.
-    - You can use the `routing.py` script provided in the project to parse the routing table data and generate the JSON format.
-
-### Running the Project
-
-To run the simulator, follow these steps:
-
-1. Open a terminal and navigate to the project directory.
-2. Execute the following command:
-
+1. Navigate to `backend/` and install dependencies:
    ```bash
-   python routing_simulator.py
+   uv add fastapi uvicorn pydantic
    ```
 
-### Output
+2. Run the FastAPI server:
 
-The simulator will process the data in `routing_table_input.txt` and generate the output. The output will be displayed in the terminal or saved to a file, depending on the project configuration.
+   ```bash
+   uv run uvicorn app:app --reload --port 8000
+   ```
 
-### Additional Notes
+---
 
-- Ensure that `routing_table_input.txt` is properly formatted as per the project requirements.
-- If you encounter any issues, check for compatibility with Python 3.12 and verify the correctness of the input file.
+### 💻 Frontend Setup (React + Vite)
 
-## License
+1. Navigate to `frontend/`:
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+   ```bash
+   cd frontend
+   bun install   # or pnpm install
+   ```
 
-## Acknowledgments
+2. Run the development server:
 
-- The project was developed by Biswarup Naha, Dona Murmu, Sourav Karmakar, Avanish, and Hemdatta Das under the guidance of Mrs. Nabanita Das.
-- [Python](https://www.python.org/) & [Cisco Packet Tracer](https://www.cisco.com/c/en/us/products/routers/packet-tracer/index.html) are used in this project.
-- The contributors and maintainers for their hard work and dedication.
+   ```bash
+   bun run dev
+   ```
+
+---
+
+## 🧪 How to Use
+
+### 1. Get Routing Table
+
+Copy raw routing table output from Packet Tracer or a real router:
+
+```
+C    10.0.0.0/8 is directly connected, FastEthernet0/0
+C    20.0.0.0/8 is directly connected, Serial2/0
+O    30.0.0.0/8 [110/65] via 20.0.0.2, 02:06:25, Serial2/0
+```
+
+---
+
+### 2. Paste and Submit
+
+- Paste the routing table into the **Home page** (`/`)
+- Click **Submit** → routing data is parsed and POSTed to backend
+- Redirected to `/result` → shows a beautiful routing table
+
+---
+
+## 📤 API Endpoints
+
+| Method | Endpoint         | Description                    |
+|--------|------------------|--------------------------------|
+| POST   | `/api/routing`   | Save parsed routing data       |
+| GET    | `/api/routing`   | Retrieve routing data as JSON  |
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See the `LICENSE` file for details.
+
+---
+
+## 👥 Contributors
+
+- Biswarup Naha
+- Dona Murmu
+- Sourav Karmakar
+- Avanish
+- Hemdatta Das  
+**Guided by:** Mrs. Nabanita Das
+
+---
+
+## 🙏 Acknowledgments
+
+- [Python](https://www.python.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [React](https://reactjs.org/)
+- [Cisco Packet Tracer](https://www.netacad.com/)
+
