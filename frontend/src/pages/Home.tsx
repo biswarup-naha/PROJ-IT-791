@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import LoaderOverlay from './ui/LoaderOverlay'; // <- Import it
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
   const [rawInput, setRawInput] = useState('');
@@ -138,8 +139,8 @@ const Home: React.FC = () => {
             <h4 className="font-bold text-lg mb-2">Project Info</h4>
             <ul className="space-y-1 text-sm">
               <li><a href="#" className="hover:underline">Home</a></li>
-              <li><a href="#" className="hover:underline">Contact</a></li>
-              <li><a href="#" className="hover:underline">How it Works</a></li>
+              <li><Link to="/contact"><a href="#" className="hover:underline">Contact</a></Link></li>
+              <li><Link to="/howItWorks"><a href="#" className="hover:underline">How it Works</a></Link></li>
               <li><a href="#" className="hover:underline">API Docs</a></li>
               <li><a href="#" className="hover:underline">GitHub Repository</a></li>
             </ul>
