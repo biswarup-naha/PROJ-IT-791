@@ -1,25 +1,3 @@
 {
-    "routes": [
-        {
-            "destination": "10.0.0.0/8",
-            "next_hop": "directly connected",
-            "interface": "FastEthernet0/0",
-            "protocol": "C",
-            "metric": null
-        },
-        {
-            "destination": "20.0.0.0/8",
-            "next_hop": "directly connected",
-            "interface": "Serial2/0",
-            "protocol": "C",
-            "metric": null
-        },
-        {
-            "destination": "30.0.0.0/8",
-            "next_hop": "20.0.0.2",
-            "interface": "Serial2/0",
-            "protocol": "O",
-            "metric": "110/65"
-        }
-    ]
+    "routes": []
 }

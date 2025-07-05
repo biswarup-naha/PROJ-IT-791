@@ -1,85 +1,116 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
-    const [rawInput, setRawInput] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+const Home: React.FC = () => {
+  const [input, setInput] = useState('');
+  const navigate = useNavigate();
 
-    const parseRoutingTable = (table: string) => {
-        const routes: any[] = [];
-        const lines = table.trim().split("\n");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:8000/api/routing', { data: input });
+      if (res.status === 200) {
+        navigate('/result');
+      }
+    } catch (err) {
+      console.error('Error submitting routing data:', err);
+    }
+  };
 
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed) continue;
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-200 via-white to-green-100 text-gray-800 flex flex-col">
 
-            const parts = trimmed.split(/\s+/);
-            const protocol = parts[0];
+      {/* Header / Hero Section */}
+      <header className="text-center py-20 px-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-green-700 drop-shadow-md">
+          Automated SDN Routing Configurator
+        </h1>
+        <p className="mt-4 text-lg max-w-2xl mx-auto text-gray-600">
+          Paste your routing data and automate the configuration process with FastAPI + React.
+        </p>
+      </header>
 
-            if (trimmed.includes("is directly connected")) {
-                const destination = parts[1];
-                const iface = parts[parts.length - 1];
-                routes.push({
-                    destination,
-                    next_hop: "directly connected",
-                    interface: iface,
-                    protocol,
-                });
-            } else if (trimmed.includes("via")) {
-                const destination = parts[1];
-                const metric = parts[2].replace("[", "").replace("]", "");
-                const next_hop = parts[4].replace(",", "");
-                const iface = parts[6]; 
-                routes.push({
-                    destination,
-                    next_hop,
-                    interface: iface,
-                    protocol,
-                    metric,
-                });
-            }
-        }
-
-        return { routes };
-    };
-
-    const handleSubmit = async () => {
-        try {
-            const parsed = parseRoutingTable(rawInput);
-            await axios.post("http://localhost:8000/api/routing", parsed);
-            setError(null);
-            navigate("/result"); 
-        } catch (err) {
-            setError("Failed to parse or submit routing data.");
-            console.error(err);
-        }
-    };
-
-    return (
-        <div className="min-h-screen p-6">
-            <div className="max-w-3xl mx-auto space-y-4">
-                <h1 className="text-3xl font-bold">Input raw routing data</h1>
-                <textarea
-                    rows={10}
-                    className="w-full p-4 rounded-lg border border-gray-600"
-                    value={rawInput}
-                    onChange={(e) => setRawInput(e.target.value)}
-                    placeholder={`O    30.0.0.0/8 [110/65] via 192.168.1.1, 02:06:25, Serial2/0
-C    10.0.0.0/8 is directly connected, FastEthernet0/0
-C    20.0.0.0/8 is directly connected, Serial2/0`}
-                />
-                <button
-                    onClick={handleSubmit}
-                    className="px-6 py-2 bg-blue-300 hover:bg-blue-500 rounded"
-                >
-                    Submit
-                </button>
-                {error && <p className="text-red-500">{error}</p>}
-            </div>
+      {/* Feature Section */}
+      <section className="py-16 bg-white/50 backdrop-blur-sm">
+        <h2 className="text-3xl font-bold text-center text-green-700 mb-10">Key Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-6">
+          <div className="bg-white/70 p-6 rounded-xl shadow-xl border border-green-100 hover:scale-105 transition">
+            <h3 className="text-xl font-semibold text-green-600 mb-2">1. Accepts Raw Routing Data</h3>
+            <p>Input raw routing table output from Cisco routers or Packet Tracer.</p>
+          </div>
+          <div className="bg-white/70 p-6 rounded-xl shadow-xl border border-green-100 hover:scale-105 transition">
+            <h3 className="text-xl font-semibold text-green-600 mb-2">2. Parses and Converts</h3>
+            <p>Automatically converts routing data to structured JSON using FastAPI backend.</p>
+          </div>
+          <div className="bg-white/70 p-6 rounded-xl shadow-xl border border-green-100 hover:scale-105 transition">
+            <h3 className="text-xl font-semibold text-green-600 mb-2">3. View Parsed Table</h3>
+            <p>Visualize your routes cleanly in a beautiful and responsive table.</p>
+          </div>
         </div>
-    );
+      </section>
+
+      {/* Routing Input Section */}
+      <section className="py-10 px-4 w-full max-w-4xl mx-auto">
+        <form onSubmit={handleSubmit}>
+          <label className="block text-xl font-semibold mb-2 text-center">Paste Your Raw Routing Table Below</label>
+          <textarea
+            rows={8}
+            className="w-full p-4 border rounded-md shadow-inner focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+            placeholder={`Example:\nC 10.0.0.0/8 is directly connected, FastEthernet0/0\nC 20.0.0.0/8 is directly connected, Serial2/0\nO 30.0.0.0/8 [110/65] via 20.0.0.2, 02:06:25, Serial2/0`}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            required
+          />
+          <div className="text-center mt-6">
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-8 py-3 rounded-full hover:bg-green-700 transition font-semibold shadow-md"
+            >
+              Connect IPs to Automate
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* Footer */}
+<footer className="mt-auto bg-green-800 text-white py-10">
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+    <div>
+      <h4 className="font-bold text-lg mb-2">SDN AutoConfig Tool</h4>
+      <p>
+        Automates the configuration and assessment of routing tables in a single administrative domain using FastAPI and React.
+      </p>
+    </div>
+    <div>
+      <h4 className="font-bold text-lg mb-2">Project Info</h4>
+      <ul className="space-y-1 text-sm">
+        <li><a href="#" className="hover:underline">Home</a></li>
+        <li><a href="#" className="hover:underline">Contact</a></li>
+        <li><a href="#" className="hover:underline">How it Works</a></li>
+        <li><a href="#" className="hover:underline">API Docs</a></li>
+        <li><a href="#" className="hover:underline">GitHub Repository</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 className="font-bold text-lg mb-2">Contributors</h4>
+      <ul className="text-sm space-y-1">
+        <li>Biswarup Naha</li>
+        <li>Dona Murmu</li>
+        <li>Sourav Karmakar</li>
+        <li>Avanish</li>
+        <li>Hemdatta Das</li>
+        <li className="mt-2 font-semibold text-green-200">Guided by: Mrs. Nabanita Das</li>
+      </ul>
+    </div>
+  </div>
+  <p className="text-center text-xs mt-6 text-green-200">
+    © 2025 Automated SDN Tool – B.Tech Final Year Project, All Rights Reserved
+  </p>
+</footer>
+
+    </div>
+  );
 };
 
 export default Home;

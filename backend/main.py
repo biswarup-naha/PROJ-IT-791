@@ -1,6 +1,10 @@
+from fastapi import FastAPI
 from ncclient import manager
 
-def main():
+app = FastAPI()
+
+@app.get("/")
+def fetch_running_config():
     with manager.connect(
         host="10.10.20.50",
         port=830,
@@ -13,8 +17,4 @@ def main():
     ) as m:
         print("✅ Connected to R1")
         config = m.get_config(source="running").data_xml
-        print("📦 Running Config:\n")
-        print(config)
-
-if __name__ == "__main__":
-    main()
+        return {"config": config}
