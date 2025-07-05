@@ -40,3 +40,12 @@ def get_routing_table():
     with open(DATA_FILE, "r") as f:
         data = json.load(f)
     return data
+
+@app.get("/api/netconf")
+def get_routing_table():
+    if not os.path.exists(DATA_FILE):
+        raise HTTPException(status_code=404, detail="No routing data found.")
+    with open(DATA_FILE, "r") as f:
+        data = json.load(f)
+    return data
+

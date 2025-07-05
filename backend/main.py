@@ -2,9 +2,9 @@ from ncclient import manager
 
 def main():
     with manager.connect(
-        host="10.10.20.50",
+        host="192.168.152.133",
         port=830,
-        username="admin",
+        username="developer",
         password="C1sco12345",
         hostkey_verify=False,
         device_params={"name": "csr"},
