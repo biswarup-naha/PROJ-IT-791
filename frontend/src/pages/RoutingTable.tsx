@@ -48,7 +48,7 @@ const RoutingTable: React.FC = () => {
     return (
         <Card className="max-w-5xl mx-auto mt-10 shadow-xl border rounded-2xl">
             <CardContent className="p-6">
-                <h2 className="text-2xl font-semibold flex items-center gap-2 mb-4">
+                <h2 className="text-2xl font-semibold flex items-center justify-center gap-2 mb-4">
                     <NetworkIcon className="h-6 w-6" /> Routing Table
                 </h2>
 
